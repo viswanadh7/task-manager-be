@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-export const sequelize = new Sequelize({
+export const sequelize = new Sequelize(process.env.DATABASE_URL as string, {
     database: process.env.DATABASE ?? "task",
     host: process.env.HOST ?? "",
     port: Number(process.env.DB_PORT) ?? 3306,
