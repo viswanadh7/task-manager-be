@@ -5,15 +5,6 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-console.log({
-    database: process.env.DATABASE ?? "task",
-    host: process.env.HOST ?? "",
-    port: Number(process.env.DB_PORT),
-    dialect: "mysql",
-    username: process.env.USERNAME ?? "root",
-    password: process.env.DB_PASSWORD || "password",
-    models: [UserModel, TaskModel],
-});
 export const sequelize = new Sequelize({
     database: process.env.DATABASE ?? "task",
     host: process.env.HOST ?? "",
@@ -22,4 +13,14 @@ export const sequelize = new Sequelize({
     username: process.env.USERNAME ?? "root",
     password: process.env.DB_PASSWORD || "password",
     models: [UserModel, TaskModel],
+    retry: {
+        match: [
+            "Sequelize.ConnectionError",
+            "Sequelize.ConnectionRefusedError",
+            "Sequelize.ConnectionTimedOutError",
+            "Sequelize.TimeoutError",
+            "/Deadlock/i",
+        ],
+        max: 2,
+    },
 });
