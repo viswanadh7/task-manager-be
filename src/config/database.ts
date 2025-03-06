@@ -22,6 +22,7 @@ export const sequelize = new Sequelize(
     {
         host: process.env.HOST,
         dialect: "mysql",
+        database: process.env.SERVER_DATABASE,
         port: Number(process.env.DB_PORT),
         models: [UserModel, TaskModel],
     }
