@@ -7,8 +7,10 @@ dotenv.config();
 
 export const sequelize = new Sequelize({
     database: process.env.DATABASE ?? "task",
+    host: process.env.HOST ?? "localhost",
+    port: Number(process.env.DB_PORT) ?? 3306,
     dialect: "mysql",
     username: process.env.USERNAME ?? "root",
-    password: process.env.DB_PASSWORD ?? "password",
+    password: process.env.DB_PASSWORD || "password",
     models: [UserModel, TaskModel],
 });
