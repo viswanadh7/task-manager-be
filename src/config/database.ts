@@ -7,7 +7,7 @@ dotenv.config();
 
 // export const sequelize = new Sequelize({
 //     database: process.env.DATABASE ?? "task",
-//     host: process.env.HOST ?? "localhost",
+//     host: process.env.HOST ?? "",
 //     port: Number(process.env.DB_PORT) ?? 3306,
 //     dialect: "mysql",
 //     username: process.env.USERNAME ?? "root",
@@ -15,15 +15,14 @@ dotenv.config();
 //     models: [UserModel, TaskModel],
 // });
 
-export const sequelize = new Sequelize(
-    process.env.DATABASE as string,
-    process.env.USERNAME as string,
-    process.env.DB_PASSWORD,
-    {
-        host: process.env.HOST,
-        dialect: "mysql",
-        database: process.env.SERVER_DATABASE,
-        port: Number(process.env.DB_PORT),
-        models: [UserModel, TaskModel],
-    }
-);
+export const sequelize = new Sequelize(process.env.DATABASE_URL!, {
+    dialect: "mysql",
+    dialectOptions: {
+        connectTimeout: 60000,
+    },
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    define: { timestamps: false },
+    logging: false,
+    models: [UserModel, TaskModel],
+});
