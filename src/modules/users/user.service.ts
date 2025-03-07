@@ -39,12 +39,14 @@ export class UserService {
         }
         try {
             const hash = await bcrypt.hash(body.password, 10);
-            await this.userRepo.createUser({
+            const response = await this.userRepo.createUser({
                 name: body.name,
                 email: body.email,
                 password: hash,
             });
-            return { message: "SignUp successfull" };
+            if (response) {
+                return { status: 200, message: "SignUp successfull" };
+            }
         } catch (error) {
             console.log(error);
         }
