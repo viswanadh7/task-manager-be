@@ -27,10 +27,10 @@ export class TaskModel extends Model {
     declare title: string;
 
     @Column({ field: "priority" })
-    declare priority: string;
+    declare priority: number;
 
     @Column({ field: "status" })
-    declare status: number;
+    declare status: string;
 
     @Column({ field: "startTime" })
     declare startTime: Date;

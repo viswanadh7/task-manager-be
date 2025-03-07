@@ -1,12 +1,13 @@
 import { Service } from "typedi";
 import { TaskRepo } from "./task.repo";
 import { HttpError } from "routing-controllers";
+import { TFilter, TNewTask } from "./task.dao";
 
 @Service()
 export class TaskService {
     constructor(private taskRepo: TaskRepo) {}
 
-    public async getAllTasks(userID: number, filter: {}) {
+    public async getAllTasks(userID: number, filter: TFilter) {
         try {
             let result = await this.taskRepo.getAllTasks(userID, filter);
             result = result?.map((res) => res.get({ plain: true }));
@@ -16,14 +17,26 @@ export class TaskService {
         }
     }
 
-    public async createTask(body: {}) {
+    public async getDashborad(userID: number) {
+        try {
+            let summary = await this.taskRepo.getOverallSummary(userID);
+            let pendingSummary = await this.taskRepo.getPendingSummary(userID);
+            if (summary && pendingSummary) {
+                return { status: 200, data: { summary, pendingSummary } };
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
+    public async createTask(body: TNewTask) {
         try {
             let result = await this.taskRepo.createTask(body);
 
             if (result) {
-                return { message: "Task created" };
+                return { status: 200, message: "Task added" };
             } else {
-                throw new Error("Failed to get tasks");
+                return { message: "Failed to add task" };
             }
         } catch (error) {
             console.log(error);
@@ -33,7 +46,10 @@ export class TaskService {
     public async updateTask(body: {}, taskID: number) {
         try {
             let result = await this.taskRepo.updateTask(body, taskID);
-            return result;
+            if (result) {
+                return { status: 200, message: "Task updated successfully" };
+            }
+            return { message: "Failed to update task" };
         } catch (error) {
             console.log(error);
         }
@@ -42,7 +58,10 @@ export class TaskService {
     public async deleteTask(taskID: number) {
         try {
             let result = await this.taskRepo.deleteTask(taskID);
-            return result;
+            if (result) {
+                return { status: 200, message: "Task deleted" };
+            }
+            return { message: "Failed to delete task" };
         } catch (error) {
             console.log(error);
         }

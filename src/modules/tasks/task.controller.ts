@@ -11,6 +11,7 @@ import {
 } from "routing-controllers";
 import { Service } from "typedi";
 import { TaskService } from "./task.service";
+import { TNewTask } from "./task.dao";
 
 @Service()
 @JsonController("/tasks")
@@ -24,16 +25,19 @@ export class TaskController {
         @QueryParam("order") order?: string,
         @QueryParam("priority") priority?: number,
         @QueryParam("status") status?: string,
-        @QueryParam("limit") limit?: number,
-        @QueryParam("offset") offset?: number
+        @QueryParam("page") page?: number
     ) {
-        console.log(sort, order, priority, status);
-        const filter = {sort, order, priority, status, limit, offset}
+        const filter = { sort, order, priority, status, page };
         return this.taskService.getAllTasks(id, filter);
     }
 
+    @Get("/dashboard/:id")
+    async getDashboard(@Param("id") userID: number) {
+        return await this.taskService.getDashborad(userID);
+    }
+
     @Post("/create")
-    async createTask(@Body() body: {}) {
+    async createTask(@Body() body: TNewTask) {
         return this.taskService.createTask(body);
     }
 

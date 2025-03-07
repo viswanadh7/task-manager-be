@@ -17,7 +17,12 @@ export class UserService {
         const match = await bcrypt.compare(body.password, user.password);
         if (match) {
             const token = jwt.sign({ email: body.email }, JWT_SECRET_KEY);
-            return { userID: user.userID, email: user.email, token };
+            return {
+                userID: user.userID,
+                username: user.name,
+                email: user.email,
+                token,
+            };
         } else {
             return { message: "Incorrect credentials!!!" };
         }
