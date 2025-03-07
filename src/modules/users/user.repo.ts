@@ -1,5 +1,6 @@
 import { Service } from "typedi";
 import { UserModel } from "./user.model";
+import { UniqueConstraintError } from "sequelize";
 
 @Service()
 export class UserRepo {

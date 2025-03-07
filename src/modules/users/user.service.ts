@@ -12,7 +12,7 @@ export class UserService {
         const user = await this.userRepo.getUser(body.email);
         const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || "secret";
         if (!user) {
-            throw new HttpError(401, "User not found");
+            return { status: 401, message: "User not found" };
         }
         const match = await bcrypt.compare(body.password, user.password);
         if (match) {
@@ -28,6 +28,10 @@ export class UserService {
         email: string;
         password: string;
     }) {
+        const user = await this.userRepo.getUser(body.email);
+        if (user) {
+            return { status: 401, message: "User already exists." };
+        }
         try {
             const hash = await bcrypt.hash(body.password, 10);
             await this.userRepo.createUser({
@@ -35,7 +39,7 @@ export class UserService {
                 email: body.email,
                 password: hash,
             });
-            return { message: "User created" };
+            return { message: "SignUp successfull" };
         } catch (error) {
             console.log(error);
         }
